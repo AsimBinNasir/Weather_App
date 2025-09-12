@@ -11,7 +11,7 @@ const Navbar = () => {
       <div>
         <button className='flex  gap-1.5 items-center justify-center rounded-lg bg-neutral-700 px-2.5 py-2 sm:px-4 sm:py-3 sm:gap-2.5 '>
           <img src={IconUnit} alt="Icon Units Logo"  className='w-4 h-4'/>
-          <span className='font-dmsans text-neutral-0 text-sm sm:text-lg'>Units</span>
+          <span className='font-dmsans text-neutral-0 text-sm sm:text-base'>Units</span>
           <img src={DropDownArrow} alt="Dropdown Arrow" />
         </button>
       </div>
