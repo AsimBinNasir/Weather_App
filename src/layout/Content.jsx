@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
+
 import WeatherInfoContent from '../components/WeatherInfoContent'
 import HourlyForecast from '../components/HourlyForecast'
 import ClearImg from '../assets/Images/icon-sunny.webp';
@@ -8,10 +9,14 @@ import DrizzleImg from '../assets/Images/icon-drizzle.webp';
 import RainImg from '../assets/Images/icon-rain.webp';
 import SnowImg from '../assets/Images/icon-snow.webp';
 import ThunderstormImg from '../assets/Images/icon-storm.webp';
+import WeatherInfoContentLoading from '../components/WeatherInfoContentLoading';
+import HourlyForecastLoading from '../components/HourlyForecastLoading';
 const Content = () => {
   const [weather, setWeather] = useState(null);
   const [geo, setGeo] = useState(null);
   const [error, setError] = useState(null);
+
+
 
   const imageMap = {
     clear: ClearImg,
@@ -84,14 +89,31 @@ const Content = () => {
       }
     })();
   }, []);
+
   if (error) return <p className="text-red-500">{error}</p>;
-  return (
+  if (!weather || !geo) return (
     <div className='grid grid-cols-1 gap-8 md:grid-cols-3'>
-      <div className='sm:col-span-2'>
-        <WeatherInfoContent weather={weather} geo={geo} getWeatherImage={getWeatherImage}/>
+      <div className='md:col-span-2'>
+        <WeatherInfoContentLoading />
       </div>
-      <div className='md:col-span-1'>
-        <HourlyForecast />
+      <div >
+        <HourlyForecastLoading />
+      </div>
+    </div>
+  );
+  const apiTime = weather.current.time;
+  const date = new Date(apiTime);
+  const timezone = weather.timezone || "UTC";
+  const hourlyObject = weather.hourly
+  console.log(hourlyObject)
+  console.log("Current Time:", apiTime);
+  return (
+    <div className='grid grid-cols-1 gap-8 md:grid-cols-3'  >
+      <div className='md:col-span-2' >
+        <WeatherInfoContent weather={weather} geo={geo} getWeatherImage={getWeatherImage} date={date} />
+      </div>
+      <div className='flex flex-col md:col-span-1' >
+        <HourlyForecast date={date} hourlyObject={hourlyObject} timezone={timezone} />
       </div>
     </div>
   )
