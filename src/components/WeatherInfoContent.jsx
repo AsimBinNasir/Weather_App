@@ -4,7 +4,7 @@ import WeatherBackgroundSmall from '../assets/Images/bg-today-small.svg';
 
 
 
-const WeatherInfoContent = ({ weather, geo, getWeatherImage,date }) => {
+const WeatherInfoContent = ({ weather, geo, getWeatherImage, date }) => {
 
   // Get today's date
   const today = date.toLocaleDateString('en-US', {
@@ -13,12 +13,21 @@ const WeatherInfoContent = ({ weather, geo, getWeatherImage,date }) => {
     day: 'numeric',
     year: 'numeric',
   });
-  
+
 
   const cityName = geo.city || geo.locality || geo.principalSubdivision || 'Unknown';
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full overflow-y-auto
+    [&::-webkit-scrollbar]:w-0
+    hover:[&::-webkit-scrollbar]:w-1
+    [&::-webkit-scrollbar-track]:rounded-full
+  [&::-webkit-scrollbar-track]:bg-gray-100
+    [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-gray-300
+  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+    >
       <div className="relative w-auto mb-8">
         <img
           src={WeatherBackgroundLarge}

@@ -108,12 +108,12 @@ const Content = () => {
   console.log(hourlyObject)
   console.log("Current Time:", apiTime);
   return (
-    <div className='grid grid-cols-1 gap-8 md:grid-cols-3'  >
-      <div className='md:col-span-2' >
+    <div className='grid grid-cols-1 gap-8 md:grid-cols-3 md:grid-rows-[minmax(0,80vh)] '  >
+      <div className='md:col-span-2 ' >
         <WeatherInfoContent weather={weather} geo={geo} getWeatherImage={getWeatherImage} date={date} />
       </div>
-      <div className='flex flex-col md:col-span-1' >
-        <HourlyForecast date={date} hourlyObject={hourlyObject} timezone={timezone} />
+      <div className='h-172 md:col-span-1 flex flex-col md:h-full' >
+        <HourlyForecast date={date} hourlyObject={hourlyObject} timezone={timezone} getWeatherImage={getWeatherImage} />
       </div>
     </div>
   )

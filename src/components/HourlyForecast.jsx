@@ -45,60 +45,84 @@ const HourlyForecast = ({ getWeatherImage, date, hourlyObject, timezone }) => {
   const hourlyData = hourlyObject.time.map((t, i) => {
     const dateObj = new Date(t);
     const day = new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: timezone }).format(dateObj);
-    const hour = new Intl.DateTimeFormat("en-US", { hour: "numeric", hour12: false, timeZone: timezone }).format(dateObj);
+    const hour = new Intl.DateTimeFormat("en-US", { hour: "numeric", hour12: true, timeZone: timezone }).format(dateObj);
     const temp = hourlyObject.temperature_2m[i];
-    return { time: t, day, hour, temp };
+    const weatherCode = hourlyObject.weather_code[i];
+    return { time: t, day, hour, temp, weatherCode };
   })
     .filter(({ day }) => day === currentDay);
-    console.log(hourlyData)
+  console.log(hourlyData)
   return (
-    <div className="w-full h-auto p-6 bg-neutral-800 border border-neutral-600  rounded-2xl relative "  ref={closePopup}>
-      <div className="flex items-center justify-between mb-4">
+    <div className="flex flex-col h-full p-6 bg-neutral-800 rounded-2xl relative" ref={closePopup}>
+      {/* Heading and dropdown */}
+      <div className="flex items-center justify-between">
         <h3 className="font-dmsans font-semibold text-xl text-neutral-0">
           Hourly Forecast
         </h3>
         <div
           className="flex gap-3 items-center px-4 py-2 bg-neutral-600 rounded-lg cursor-pointer"
+          onClick={togglePopup}
         >
           <p className="font-dmsans font-medium text-base text-neutral-0">{currentDay}</p>
           <img
             src={DropDownArrow}
             alt="Dropdown Arrow"
             className={`w-3 h-3 transition-transform ${showPopup ? 'rotate-180' : ''}`}
-            onClick={togglePopup}
-            
           />
         </div>
       </div>
 
+      {/* Popup */}
       {showPopup && (
-        <div className="absolute top-16 right-4 bg-neutral-700 rounded-xl shadow-lg z-10">
-          {daylist.map((day, index) => (
-            <p
-              key={index}
-              className="px-4 py-2 cursor-pointer hover:bg-neutral-600"
-              onClick={() => handleDaySelect(day)}
-            >
-              {day}
-            </p>
-          ))}
-        </div>
+       <div className="absolute w-60 flex flex-col gap-1 top-20 right-4 p-2 bg-neutral-800 rounded-xl shadow-2xl z-10">
+       {daylist.map((day, index) => (
+         <div key={index} className="w-auto">
+           <p
+             onClick={() => handleDaySelect(day)}
+             className={`
+               font-dmsans font-medium text-base px-2 py-2.5 cursor-pointer rounded-lg
+               ${currentDay === day 
+                 ? 'bg-neutral-600 text-white hover:bg-neutral-700'  // selected day styles
+                 : 'bg-neutral-800 text-neutral-0 hover:bg-neutral-600' // normal day styles
+               }
+             `}
+           >
+             {day}
+           </p>
+         </div>
+       ))}
+     </div>
+     
       )}
 
-      <div className="mt-4 flex flex-col gap-4 overflow-y-scroll">
-        {hourlyData?.map(({ time, temp }, index) => (
+      {/* Scrollable list */}
+      <div className="mt-4 flex-1 overflow-y-auto flex flex-col gap-4
+      [&::-webkit-scrollbar]:w-0
+      hover:[&::-webkit-scrollbar]:w-1
+      [&::-webkit-scrollbar-track]:rounded-full
+    [&::-webkit-scrollbar-track]:bg-gray-100
+      [&::-webkit-scrollbar-thumb]:rounded-full
+    [&::-webkit-scrollbar-thumb]:bg-gray-300
+    dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+    dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
+        {hourlyData?.map(({ temp, hour, weatherCode }, index) => (
           <div
             key={index}
-            className="flex justify-between items-center bg-neutral-700 rounded-xl p-4 w-auto"
+            className="flex justify-between items-center bg-neutral-700 border border-neutral-600 rounded-xl px-3 py-2.5 w-auto"
           >
-            <p className="font-dmsans text-sm text-neutral-200">
-              {new Date(time).getHours().toString().padStart(2, '0')}:00
+            <div className='flex flex-between items-center gap-2'>
+              <img src={getWeatherImage(weatherCode)} alt="Weather Image" className='w-10 h-10'/>
+              <p className="font-dmsans font-medium text-xl text-neutral-0">
+              {hour}
             </p>
-            <p className="font-dmsans text-lg text-neutral-0">{Math.round(temp)}°</p>
+            </div>
+            
+            <p className="font-dmsans font-normal text-base text-neutral-0">{Math.round(temp)}°</p>
           </div>
         ))}
       </div>
     </div>
+
   );
 };
 
