@@ -67,14 +67,14 @@ const HourlyForecast = ({ getWeatherImage, date, hourlyObject, timezone }) => {
           <img
             src={DropDownArrow}
             alt="Dropdown Arrow"
-            className={`w-3 h-3 transition-transform ${showPopup ? 'rotate-180' : ''}`}
+            className={`w-3 h-3 transition-transform duration-500 ${showPopup ? 'rotate-0' : 'rotate-180'}`}
           />
         </div>
       </div>
 
       {/* Popup */}
       {showPopup && (
-       <div className="absolute w-60 flex flex-col gap-1 top-20 right-4 p-2 bg-neutral-800 rounded-xl shadow-2xl z-10">
+       <div className="absolute w-60 flex flex-col gap-1 top-20 right-6 p-2 bg-neutral-800 rounded-xl shadow-2xl z-10">
        {daylist.map((day, index) => (
          <div key={index} className="w-auto">
            <p
