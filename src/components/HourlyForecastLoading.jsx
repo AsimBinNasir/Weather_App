@@ -21,14 +21,14 @@ const HourForecastLoading = () => {
 
       {/* Scrollable list */}
       <div className="mt-4 flex-1 overflow-hidden flex flex-col gap-4">
-        {Array.from({ length: 8 }).map((_, index) => (
+        {Array.from({ length: 10 }).map((_, index) => (
           <div
             key={index}
             className="flex justify-between items-center bg-neutral-700 border border-neutral-600 rounded-xl px-3 py-2.5 w-auto"
           >
             {/* Left side (time & icon placeholder) */}
             <div className="flex items-center gap-2">
-              <div className="h-4 w-12 bg-neutral-600 rounded animate-pulse"></div>
+              <div className="h-10 w-10 bg-neutral-600 rounded animate-pulse"></div>
               <div className="h-8 w-8 bg-neutral-600 rounded-full animate-pulse"></div>
             </div>
 
