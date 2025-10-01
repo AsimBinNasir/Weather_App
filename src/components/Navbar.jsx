@@ -3,15 +3,8 @@ import Logo from '../assets/Images/logo.svg'
 import IconUnit from '../assets/Images/icon-units.svg'
 import DropDownArrow from '../assets/Images/icon-dropdown.svg'
 import Check from '../assets/Images/icon-checkmark.svg'
-const Navbar = () => {
-  const [showPopup, setShowPopup] = useState(false);
-  const [unitSystem, setUnitSystem] = useState("metric");
-  const [selectedUnit, setSelectedUnit] = useState({
-    temp: 'celsius',
-    wind: 'kmh',
-    precipitation: 'mm',
-  });
-  
+const Navbar = ({selectedUnit, unitSystem, setSelectedUnit, setUnitSystem} ) => {
+  const [showPopup, setShowPopup] = useState(false); 
   const closePopup = useRef(null);
   const togglePopup = () => setShowPopup(!showPopup);
 
@@ -31,8 +24,8 @@ const Navbar = () => {
     };
   }, []);
   return (
-    <div className='w-full h-auto flex items-center justify-between relative' >
-      <div ref={closePopup}>
+    <div className='w-full h-auto flex items-center justify-between relative' ref={closePopup}>
+      <div >
         <img src={Logo} alt="Weather Now Logo" className={`w-auto h-7 sm:h-10`} />
       </div>
       <div>

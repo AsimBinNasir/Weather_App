@@ -4,7 +4,7 @@ import WeatherBackgroundSmall from '../assets/Images/bg-today-small.svg';
 
 
 
-const WeatherInfoContent = ({ weather, geo, getWeatherImage, date }) => {
+const WeatherInfoContent = ({ weather, geo, getWeatherImage, date,temp, wind, precipitation }) => {
 
   // Get today's date
   const today = date.toLocaleDateString('en-US', {
@@ -61,7 +61,7 @@ const WeatherInfoContent = ({ weather, geo, getWeatherImage, date }) => {
         {[
           {
             label: "Feels Like",
-            value: Math.round(weather.current.apparent_temperature) + "°",
+            value: Math.round(weather.current.apparent_temperature) + `${temp === 'celsius' ? "°C" : "°F"}`,
           },
           {
             label: "Humidity",
@@ -69,11 +69,11 @@ const WeatherInfoContent = ({ weather, geo, getWeatherImage, date }) => {
           },
           {
             label: "Wind",
-            value: Math.round(weather.current.wind_speed_10m) + " m/s",
+            value: Math.round(weather.current.wind_speed_10m) + `${wind === 'kmh' ? " km/h" : " mph"}`,
           },
           {
             label: "Precipitation",
-            value: Math.round(weather.current.precipitation) + " mm",
+            value: Math.round(weather.current.precipitation) + `${precipitation === 'mm' ? " mm" : " inch"}`,
           },
         ].map((item, i) => (
           <div
