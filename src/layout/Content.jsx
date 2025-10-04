@@ -12,10 +12,10 @@ import RainImg from '../assets/Images/icon-rain.webp';
 import SnowImg from '../assets/Images/icon-snow.webp';
 import ThunderstormImg from '../assets/Images/icon-storm.webp';
 
-const Content = ({ selectedUnit, location }) => {
+const Content = ({ selectedUnit, location, setApiError }) => {
   const [weather, setWeather] = useState(null);
   const [geo, setGeo] = useState(null);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const { temp, wind, precipitation } = selectedUnit || {
     temp: 'celsius',
@@ -72,19 +72,35 @@ const Content = ({ selectedUnit, location }) => {
         ),
       ]);
 
-      const [weatherData, geoData] = await Promise.all([weatherRes.json(), geoRes.json()]);
+      if (!weatherRes.ok || !geoRes.ok) throw new Error('API fetch failed');
+
+      const [weatherData, geoData] = await Promise.all([
+        weatherRes.json(),
+        geoRes.json(),
+      ]);
 
       setWeather(weatherData);
       setGeo(geoData);
+      setApiError(null); // Clear any previous errors on success
     } catch (err) {
-      setError(err.message);
+      console.error('Weather fetch error:', err);
+      if (err.message.includes('Geolocation')) {
+        setApiError('Geolocation error: Please allow location access');
+      } else {
+        setApiError('API error: Failed to fetch weather data');
+      }
       setWeather(null);
       setGeo(null);
     }
   };
 
   useEffect(() => {
-    (async () => {
+    let isMounted = true;
+
+    const loadWeatherData = async () => {
+      if (!isMounted) return;
+      
+      setLoading(true);
       try {
         let latitude, longitude;
 
@@ -95,21 +111,34 @@ const Content = ({ selectedUnit, location }) => {
           ({ latitude, longitude } = loc);
         }
 
-        if (latitude && longitude) {
-          await fetchWeather(latitude, longitude);
-        } else {
-          setError('Location coordinates are missing.');
-        }
+        await fetchWeather(latitude, longitude);
       } catch (err) {
-        setError(err.message);
+        if (!isMounted) return;
+        
+        console.error('Location error:', err);
+        if (err.message.includes('Geolocation')) {
+          setApiError('Geolocation error: Please allow location access');
+        } else {
+          setApiError('API error: Failed to fetch weather data');
+        }
+        setWeather(null);
+        setGeo(null);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
-    })();
-  }, [selectedUnit, location]);
+    };
 
-  if (error)
-    return <p className="text-red-500 text-center mt-4">{error}</p>;
+    loadWeatherData();
 
-  if (!weather || !geo || !weather.current)
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedUnit, location, setApiError]);
+
+  // ---------------- UI ----------------
+  if (loading) {
     return (
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         <div className="md:col-span-2">
@@ -120,6 +149,12 @@ const Content = ({ selectedUnit, location }) => {
         </div>
       </div>
     );
+  }
+
+  if (!weather || !geo) {
+    // Error is handled by parent component, just return null
+    return null;
+  }
 
   const apiTime = weather.current.time;
   const date = new Date(apiTime);
