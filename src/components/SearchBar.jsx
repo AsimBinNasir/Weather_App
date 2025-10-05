@@ -113,7 +113,7 @@ const SearchBar = ({ onSelectLocation, setSearchAttempted }) => {
         {/* Search Button */}
         <button
           onClick={handleSearch}
-          className="px-6 py-4 w-full sm:w-auto font-dmsans bg-blue-500 text-neutral-0 font-medium text-base rounded-xl"
+          className="px-6 py-4 w-full sm:w-auto font-dmsans bg-blue-500 text-neutral-0 font-medium text-base rounded-xl cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-800 hover:bg-blue-700 transition"
         >
           Search
         </button>

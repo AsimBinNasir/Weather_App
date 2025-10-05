@@ -46,7 +46,11 @@ const Navbar = ({ selectedUnit, unitSystem, setSelectedUnit, setUnitSystem }) =>
   return (
     <div className='w-full h-auto flex items-center justify-between relative' ref={closePopup}>
       <div >
-        <img src={Logo} alt="Weather Now Logo" className={`w-auto h-7 sm:h-10`} />
+        <img src={Logo} 
+        alt="Weather Now Logo" 
+        className='w-auto h-7 sm:h-10 cursor-pointer'
+        onClick={() => window.location.reload()}
+        />
       </div>
       <div>
         <button
