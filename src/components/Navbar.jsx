@@ -3,8 +3,8 @@ import Logo from '../assets/Images/logo.svg'
 import IconUnit from '../assets/Images/icon-units.svg'
 import DropDownArrow from '../assets/Images/icon-dropdown.svg'
 import Check from '../assets/Images/icon-checkmark.svg'
-const Navbar = ({selectedUnit, unitSystem, setSelectedUnit, setUnitSystem} ) => {
-  const [showPopup, setShowPopup] = useState(false); 
+const Navbar = ({ selectedUnit, unitSystem, setSelectedUnit, setUnitSystem }) => {
+  const [showPopup, setShowPopup] = useState(false);
   const closePopup = useRef(null);
   const togglePopup = () => setShowPopup(!showPopup);
 
@@ -23,6 +23,26 @@ const Navbar = ({selectedUnit, unitSystem, setSelectedUnit, setUnitSystem} ) => 
       document.removeEventListener("touchstart", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const isAllImperial = 
+      selectedUnit.temp === 'fahrenheit' &&
+      selectedUnit.wind === 'mph' &&
+      selectedUnit.precipitation === 'inch';
+
+    const isAllMetric = 
+      selectedUnit.temp === 'celsius' &&
+      selectedUnit.wind === 'kmh' &&
+      selectedUnit.precipitation === 'mm';
+
+    if (isAllImperial && unitSystem !== 'imperial') {
+      setUnitSystem('imperial');
+    } else if (isAllMetric && unitSystem !== 'metric') {
+      setUnitSystem('metric');
+    }
+  }, [selectedUnit, unitSystem, setUnitSystem]);
+
+
   return (
     <div className='w-full h-auto flex items-center justify-between relative' ref={closePopup}>
       <div >
@@ -48,8 +68,8 @@ const Navbar = ({selectedUnit, unitSystem, setSelectedUnit, setUnitSystem} ) => 
             className="w-auto font-dmsans font-medium text-base text-neutral-0 leading-tight cursor-pointer hover:bg-neutral-700 rounded-lg px-2 py-2.5"
             onClick={() => {
               const newSystem = unitSystem === "metric" ? "imperial" : "metric";
-              setUnitSystem(newSystem);
 
+              setUnitSystem(newSystem);
               setSelectedUnit({
                 temp: newSystem === "metric" ? "celsius" : "fahrenheit",
                 wind: newSystem === "metric" ? "kmh" : "mph",
